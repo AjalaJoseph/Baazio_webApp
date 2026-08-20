@@ -5,9 +5,9 @@ import { motion } from 'framer-motion';
 import Navbar from '../components/navBar';
 import Footer from '../components/footer';
 import heroImage from '../assets/images/BizFlow-homepage-image2.jpg'; 
-import businessOwnerDashboard from "../assets/images/BizflowownerDashboard.png";
-import reportMockupImage from "../assets/images/report-mockup image.jpg";
-import staffTerminalImage from "../assets/images/staff terminal.jpg"
+import businessOwnerDashboard from "../assets/images/latest admin dashboard.png";
+import reportMockupImage from "../assets/images/report-sample.png";
+import staffTerminalImage from "../assets/images/staff-terminal.png"
 export default function Home() {
     const servicesData = [
     {
@@ -114,7 +114,7 @@ export default function Home() {
       <Navbar/>
         <main>
             <section id="home" className="w-full bg-background py-16 px-6 md:px-8 ">
-            <div className="w-full max-w-[1150px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            <div className="w-full max-w-287.5 mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
         {/* 🏢 LEFT CORE: HIGH-CONTRAST STATIC TYPOGRAPHY AREA */}
         <div className="flex flex-col gap-6 text-left max-w-xl">
           
@@ -153,10 +153,10 @@ export default function Home() {
 
         {/* 🖼️ RIGHT CORE: HERO PREVIEW CANVAS BLOCK */}
         <div className="w-full flex items-center justify-center animate-fade-in">
-          <div className="w-full max-w-[560px] rounded-md  border-outline-variant bg-surface-lowest p-2 shadow-sm relative group overflow-hidden">
+          <div className="w-full max-w-140 rounded-md  border-outline-variant bg-surface-lowest p-2 shadow-sm relative group overflow-hidden">
             
             {/* Smooth background glow layer token effect */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+            <div className="absolute inset-0 bg-linear-to-tr from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
             
             <img 
               src={heroImage} 
@@ -171,12 +171,12 @@ export default function Home() {
             <section id="features" className="w-full bg-surface-low  pt-4 pb-20 px-6 md:px-8 select-none">
       
       {/* 🚀 THE FIXED GRID LOCKER: Constrained to exactly 1126px wide so card widths stay beautifully compact! */}
-        <div className="w-full max-w-[1150px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch pt-10">
+        <div className="w-full max-w-287.5 mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch pt-10">
         
         <div className="relative group bg-surface-lowest rounded-md p-5 text-left cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-xs">
           
           {/* Inner Image Panel: Scaled perfectly inside the parent container card */}
-          <div className="w-full aspect-[16/10] bg-surface-low rounded-sm overflow-hidden mb-4 border border-outline-variant/30">
+          <div className="w-full aspect-16/10 bg-surface-low rounded-sm overflow-hidden mb-4 border border-outline-variant/30">
             <img 
               src={businessOwnerDashboard} 
               alt="The Business Owner Dashboard" 
@@ -200,7 +200,7 @@ export default function Home() {
         {/* Module 2: Executive Financial Reports */}
         <div className="relative group bg-surface-lowest  rounded-md p-5 text-left cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-xs">
           
-          <div className="w-full aspect-[16/10] bg-surface-low rounded-sm overflow-hidden mb-4 border border-outline-variant/30">
+          <div className="w-full aspect-16/10 bg-surface-low rounded-sm overflow-hidden mb-4 border border-outline-variant/30">
             <img 
               src={reportMockupImage} 
               alt="Executive Financial Reports" 
@@ -221,7 +221,7 @@ export default function Home() {
         {/* Module 3: The Dedicated Staff Terminal */}
         <div className="relative group bg-surface-lowest  rounded-md p-5 text-left cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-xs">
           
-          <div className="w-full aspect-[16/10] bg-surface-low rounded-sm overflow-hidden mb-4 border border-outline-variant/30">
+          <div className="w-full aspect-16/10 bg-surface-low rounded-sm overflow-hidden mb-4 border border-outline-variant/30">
             <img 
               src={staffTerminalImage} 
               alt="The Dedicated Staff Terminal" 
@@ -241,11 +241,11 @@ export default function Home() {
 
       </div>
              </section>
-              <section id="services" className="w-full bg-background py-16 px-6 md:px-8 ">
+        <section id="services" className="w-full bg-background py-14 px-6 md:px-8 ">
       
       {/* Section Header */}
-      <div className="flex flex-col items-center justify-center text-center mb-12">
-        <h2 className="text-display-md text-on-surface font-bold tracking-tight">
+      <div className="flex flex-col items-center justify-center text-center mb-10">
+        <h2 className="text-display-md text-on-surface font-serif tracking-tight">
           Core Services
         </h2>
         {/* <div className="w-12 h-[3px] bg-primary rounded-full mt-3"></div> */}
@@ -258,7 +258,7 @@ export default function Home() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
-        className="w-full max-w-[1130px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch"
+        className="w-full max-w-282.5 mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch"
       >
         {servicesData.map((service, index) => (
           /* 🧱 EACH CARD: Upgraded to motion.div inheriting variants natively */
@@ -290,7 +290,7 @@ export default function Home() {
 
             </section>
 
-            <section id="about" className="w-full bg-surface-low py-24 px-6 md:px-8 ">
+      <section id="about" className="w-full bg-surface-low py-18 px-6 md:px-8 ">
       
       {/* 🚀 THE SPLIT MOTION GRID LOGIC WRAPPER */}
       {/* amount: 0.25 ensures elements stay completely hidden until 25% of the section enters the screen viewport */}
@@ -299,7 +299,7 @@ export default function Home() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.25 }}
-        className="w-full max-w-[1126px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-start"
+        className="w-full max-w-281.5 mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-start"
       >
         
         {/* 🏢 LEFT CORE: METRIC TEXT BLOCK OVERVIEW (Spans 5 columns) */}
@@ -313,7 +313,7 @@ export default function Home() {
           </h2>
           {/* text-body-md applies smooth 16px descriptive ink variables */}
           <p className="text-body-md text-on-surface-variant leading-relaxed">
-            At BizFlow, we believe software should empower operators, not slow them down. We combine edge-cache memory clusters with relational transactional safeguards to deliver tools that keep corporate supermarkets fully secure, data-isolated, and scaling seamlessly.
+            At Baazio, we believe software should empower operators, not slow them down. We combine edge-cache memory clusters with relational transactional safeguards to deliver tools that keep corporate supermarkets fully secure, data-isolated, and scaling seamlessly.
           </p>
         </motion.div>
 

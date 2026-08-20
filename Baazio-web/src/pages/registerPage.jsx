@@ -133,9 +133,7 @@ export default function Register() {
     {/* ========================================================================= */}
     {/* ⚪ REGISTRATION FORM ELEVATED CARD CONTAINER (Now centered standalone) */}
     {/* ========================================================================= */}
-    <div className="w-full max-w-115 px-4 relative z-10 animate-scaleUp">
-      <div className="w-full bg-surface-lowest border border-slate-300 rounded-lg p-6 md:p-10 lg:p-6 shadow-md shadow-slate-950/10 text-left font-sans">
-        
+        <div className="w-full max-w-115 my-5 bg-surface-lowest border border-slate-200 rounded-md p-8 md:p-10 lg:p-8 shadow-md shadow-slate-400 text-left">
         {isSubmittedSuccessfully ? (
           /* CASE 1: ONBOARDING DISPATCH SUCCESS PANEL */
           <div className="flex flex-col items-center text-center py-4 font-sans">
@@ -311,19 +309,18 @@ export default function Register() {
           </form>
 
           {/* 🎯 FIX 3: Replaced the broken '</>' fragment closure with an explicit '</button>' tag */}
-          <div className="mt-6 pt-5 border-t border-slate-300 text-center text-xs font-bold text-slate-400">
+          <div className="mt-6 pt-5 border-t border-slate-300 text-center text-body-sm  text-slate-400">
             Already managing an active supermarket console?{" "}
             <button
               type="button"
               onClick={() => navigate('/login')}
-              className="text-blue-600 hover:text-blue-700 hover:underline transition-colors font-black cursor-pointer bg-transparent border-none p-0 ml-0.5"
+              className="text-primary hover:text-blue-700 hover:underline transition-colors text-body-sm cursor-pointer bg-transparent border-none p-0 ml-0.5"
             >
               Sign In Here
             </button>
           </div>
           </>)}
           
-              </div>
               </div>
               </div>
   )}

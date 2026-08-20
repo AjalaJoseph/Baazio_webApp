@@ -17,16 +17,15 @@ export default function Footer() {
                     {/* Column 1: Brand Copy Abstract Description */}
           <div className="flex flex-col gap-3">
             {/* 🎯 LOGO IMAGE INTEGRATION: Rendered logoImage2 with custom pixel metrics */}
-            <a href="#home" className="inline-block self-start select-none hover:opacity-90 transition-opacity focus:outline-none rounded">
-              <img 
-                src={logoImage2}  
-                alt="BizFlow logo" 
-                className="w-50  h-auto object-contain block invert" 
-              />
+            <a 
+              href="#home" 
+              className="font-serif  text-display-lg tracking-tighter text-surface select-none focus:outline-none hover:text-surface-highest transition-colors"
+            >
+              Baazio
             </a>
             {/* text-body-sm formats the 14px regular description parameters ink layout */}
             <p className="text-body-sm text-on-primary-container leading-relaxed">
-              BizFlow provides comprehensive retail management software, financial reporting cores, and staff optimization platforms for modern enterprises.
+              Baazio provides comprehensive retail management software, financial reporting cores, and staff optimization platforms for modern enterprises.
             </p>
           </div>
 
@@ -41,7 +40,7 @@ export default function Footer() {
                 Home
               </a>
               <a href="#about" className="hover:text-white transition-colors">
-                About Bizflow
+                About Baazio
               </a>
               <a href="#service" className="hover:text-white transition-colors">
                 Explore Features
@@ -138,7 +137,7 @@ export default function Footer() {
         {/* 🧾 LOWER LEGAL FOOTNOTE: Darkened dividing border line sits cleanly right above the text */}
         <div className="w-full max-w-281.5 mx-auto px-6 md:px-0 border-t border-white/20 mt-12 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-label-sm">
           <span className="font-medium text-on-primary-container/80">
-            ©  {new Date().getFullYear()} BizFlow Management System. All rights reserved.
+            ©  {new Date().getFullYear()} Baazio Management System. All rights reserved.
           </span>
           <div className="flex gap-6 font-medium text-on-primary-container/80">
             <Link to="/privacy-policy" className="hover:text-white transition-colors">
