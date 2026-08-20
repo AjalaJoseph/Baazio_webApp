@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axiosClient';
-import logoImg from '../assets/images/logo.png'; // 🎯 Re-used your exact verified relative asset pointer
-import logoImage2 from "../assets/images/BizFlow-logo2.png"
 
-/**
- * Enterprise Multi-Tenant Workspace Registration Screen.
- * Dual-pane geometric layout matching the brand's visual system and data properties.
- */
 export default function Register() {
   // 📊 Form parameters state management
   const navigate = useNavigate()

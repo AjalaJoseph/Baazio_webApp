@@ -166,7 +166,7 @@ const cash = paymentMethod?.cashPercentage ?? 0;
       {/* ========================================================================= */}
       <div className="w-full bg-surface-lowest flex px-6 pt-3  sm:flex-row items-start sm:items-center justify-between   gap-4 border-b border-slate-400 pb-3">
         <h1 className="text-headline-md text-on-surface  font-sans">Overview Dashboard</h1>
-         <button  type="button"  className="inline-flex items-center justify-center p-0.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-200 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 cursor-pointer group shadow-xs select-none"
+         <button  type="button" onClick={()=>navigate("/admin-dashboard/profile")} className="inline-flex items-center justify-center p-0.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-200 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 cursor-pointer group shadow-xs select-none"
              aria-label="Open user account profile settings menu">
             <div className="w-9 h-9 rounded-full bg-primary text-white border border-blue-400/20 flex items-center justify-center font-bold font-sans text-[13px] uppercase shrink-0 shadow-md transition-transform duration-200 group-hover:scale-95">
                 {initials}

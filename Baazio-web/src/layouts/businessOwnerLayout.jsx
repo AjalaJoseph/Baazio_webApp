@@ -188,7 +188,7 @@ const initials = userData?.owner_name
             <img
               src={logoImage2}
               alt="Baazio"
-              className="h-12 w-auto max-w-[170px] object-contain block opacity-95 select-none"
+              className="h-12 w-auto max-w-42.5 object-contain block opacity-95 select-none"
             />
 
             {/* Mobile Close Button */}
@@ -320,7 +320,8 @@ const initials = userData?.owner_name
       </div>
 
       {/* Profile */}
-      <div className="p-4 border-t border-slate-400 flex flex-col gap-3 min-h-25 justify-center shrink-0">
+      <button onClick={() =>navigate("/admin-dashboard/profile")}>
+        <div className="p-4 border-t border-slate-400 flex flex-col gap-3 min-h-25 justify-center shrink-0">
         <div className="w-full flex items-center gap-3 min-w-0">
           <div className="w-10 h-10 rounded-full bg-secondary-fixed-dim text-secondary border border-secondary flex items-center justify-center font-bold font-sans text-[14px] uppercase shrink-0 select-none shadow-sm">
             {initials}
@@ -335,6 +336,7 @@ const initials = userData?.owner_name
           </div>
         </div>
       </div>
+      </button>
     </aside>
 
     {/* Main Workspace */}
@@ -344,7 +346,7 @@ const initials = userData?.owner_name
         <img
           src={logoImage2}
           alt="Baazio"
-          className="h-auto w-auto max-w-[130px] object-contain"
+          className="h-auto w-auto max-w-32.5 object-contain"
         />
         <button
           type="button"

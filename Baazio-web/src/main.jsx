@@ -23,6 +23,8 @@ import StaffDashboardHome from './pages/staffOverviewPage.jsx';
 import RecordSalesPage from './pages/RecordSales.jsx';
 import CheckoutReviewPage from './pages/salesCheckout.jsx';
 import SalesHistoryPage from './pages/staffSales.jsx';
+import ProfilePage from './pages/profilePage.jsx';
+import StaffProfilePage from './pages/staffProfilePage.jsx';
 const router = createBrowserRouter([
   {
     path:"/",
@@ -51,7 +53,7 @@ const router = createBrowserRouter([
               { path: "financials", element: <DownloadReportsPage /> },
               { path: "billing", element: <BillingSubscriptionPage /> },
               { path: "billing/verify", element: <BillingVerifyPage /> },
-              
+              {path:"profile", element:<ProfilePage/>}
             ]
           }
          
@@ -70,7 +72,8 @@ const router = createBrowserRouter([
               {index:true, element:<StaffDashboardHome/>},
               {path:"record-sales", element:<RecordSalesPage/>},
               {path:"checkout-review", element:<CheckoutReviewPage/>},
-              {path:"sales", element:<SalesHistoryPage/>}
+              {path:"sales", element:<SalesHistoryPage/>},
+              {path:"profile", element:<StaffProfilePage/>}
             ]
           }
         ]

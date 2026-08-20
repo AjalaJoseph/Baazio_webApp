@@ -124,7 +124,7 @@ const initials = userData?.staff_name
         z-50
         h-screen
         w-72
-        flex-shrink-0
+        shrink-0
         flex flex-col justify-between
         bg-surface-lowest
         border-r border-slate-300
@@ -239,7 +239,8 @@ const initials = userData?.staff_name
 
 
           {/* USER CARD */}
-          <div className="p-2.5 mt-2 bg-surface-low border border-slate-300 rounded-lg flex items-center gap-3 min-h-[64px] justify-start w-full">
+         <button onClick={()=>navigate("/staff-dashboard/profile")}>
+           <div className="p-2.5 mt-2 bg-surface-low border border-slate-300 rounded-lg flex items-center gap-3 min-h-[64px] justify-start w-full">
             <div className="w-10 h-10 rounded-xl bg-secondary-container text-primary border border-secondary flex items-center justify-center font-bold font-sans text-[14px] uppercase shrink-0 select-none shadow-md shadow-secondary">
               {initials}
             </div>
@@ -252,6 +253,7 @@ const initials = userData?.staff_name
               </p>
             </div>
           </div>
+         </button>
         </div>
       </div>
     </aside>

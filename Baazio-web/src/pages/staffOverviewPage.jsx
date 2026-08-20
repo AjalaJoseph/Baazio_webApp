@@ -175,6 +175,7 @@ const initials = userData?.staff_name
           {/* User Profile */}
           <button
             type="button"
+            onClick={()=>navigate("/staff-dashboard/profile")}
             className="
               inline-flex
               items-center
