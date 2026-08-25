@@ -14,11 +14,7 @@ export default function OwnerLayout() {
   const accessToken = useAuthStore((state) => state.accessToken);
   const setAuthSession = useAuthStore((state) => state.setAuthSession);
   const clearAuthSession = useAuthStore((state) => state.clearAuthSession);
-    if(!accessToken){
-       navigate("/login")
-      return null;
-     
-    }
+    
      useEffect(() => {
     setIsCollapsed(false);
   }, [location.pathname]);

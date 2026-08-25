@@ -1,22 +1,206 @@
-import { useState } from "react";
-
+import React, { useState, useEffect } from "react";
+import { useAuthStore } from "../store/authStore";
+import { useNavigate } from "react-router-dom";
+import api from "../api/axiosClient";
+import AlertModal from "../components/alert";
+import axios from 'axios';
 const ProfilePage = () => {
+  const navigate = useNavigate()
   const [showEditProfile, setShowEditProfile] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false)
+  const [newUserName, setNewUserName] = useState("")
+  const [newBusinessName, setNewBusinessName] = useState("")
+  const [userData, setUserData] = useState({})
+  const [subscription, setSubscription] = useState({})
+  const [Usage, setUsage] = useState(null)
+  const [staffCount, setStaffCount] = useState(0)
+  const [currentPassword, setCurrentPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+   const [passwordChangeError, setPasswordChangeError] = useState("")
+   const [accountUpdateError, setAccountUpdateError] = useState("")
+   const [isSubmitting, setIsSubmitting] = useState(false);
+  const accessToken = useAuthStore((state) => state.accessToken)
+  const clearAuthSession = useAuthStore((state) => state.clearAuthSession);
+  const [modalConfig, setModalConfig] = useState({
+      isOpen: false,
+      type: "success",
+      title: "",
+      message: "",
+      actionLabel: ""
+    });
+  useEffect(() =>{
+    const fetchData =async ()=>{
+      try{
+        const [userDataResponse, staffResponse, usageResponse] = await Promise.all([
+           api.get('/auth/me', { headers: { Authorization: `Bearer ${accessToken}` } }),
+            api.get("/auth/all-staff",{ headers: { Authorization: `Bearer ${accessToken}` } }),
+            api.get("/auth/subscription/usage",{ headers: { Authorization: `Bearer ${accessToken}` } }),
+        ])
+        setUserData(userDataResponse.data.data)
+        const subscriptionData =userDataResponse.data.data.subscriptions
+        if(subscriptionData && subscriptionData.length>0){
+           const activeSub = subscriptionData[0];
+          setSubscription({
+            plan_name: activeSub.plan.plan_name,
+            expired_at:activeSub.expired_at,
+            status:activeSub.status,
+            max_staff:activeSub.plan.max_staff,
+            max_sales :activeSub.plan.max_sales
+          })
+        }
+        setStaffCount(staffResponse.data.data.length)
+        setUsage(usageResponse.data.data)
+      }catch(err){
+         console.error("Failed to fetch profile metadata:", err);
+      }
+    }
+    fetchData()
+  }, [accessToken])
+  const initials = userData?.owner_name
+  ? userData.owner_name
+      .split(" ")
+      .map(n => n[0])
+      .join("")
+  : "";
+  const todayTimestamp = new Date();
+  const activePlanStatus = subscription.expired_at && new Date(subscription.expired_at) < todayTimestamp
+  ? "expired"
+  : subscription.status || "inactive";
+  const maxSalesLimit= Usage?.salesLimitAllowed || 300;
+  const currentSalesCount= Usage?.salesUsedThisMonth || 0;
+  const salesProgressPercent = maxSalesLimit==="UNLIMITED"?10:(currentSalesCount / maxSalesLimit) * 100
+   const handleChangePassword = async () => {
+  try {
+    setPasswordChangeError("");
+    const cleanCurrentPassword = currentPassword.trim();
+    const cleanNewPassword = newPassword.trim();
+    const strongPasswordRegex = /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/;
 
+    if (!cleanCurrentPassword || !cleanNewPassword) {
+      setPasswordChangeError("Please all input fields are required.");
+      return;
+    }
+    
+    if (cleanNewPassword.length < 8) {
+      setPasswordChangeError("Security rule error: New password must be at least 8 characters long.");
+      return;
+    }
+    
+    if (!strongPasswordRegex.test(cleanNewPassword)) {
+      setPasswordChangeError("Password criteria unmet: New password must contain at least one uppercase letter, one lowercase letter, and one numerical digit.");
+      return;
+    }
+
+    console.log("📡 Dispatching authorized security transformation metrics...");
+    setIsSubmitting(true)
+    const changePassword = await api.patch("/auth/change-password",
+      {
+        old_password: cleanCurrentPassword,
+        new_password: cleanNewPassword
+      },
+      { headers: { Authorization: `Bearer ${accessToken}` } }
+    );
+
+    setCurrentPassword("");
+    setNewPassword("");
+
+    setModalConfig({
+      isOpen: true,
+      type: "success", 
+      title: "Password Changed Successfully",
+      message: changePassword.data?.message || "Your device credentials updated cleanly.",
+      actionLabel: "Login Back" 
+    });
+
+    setTimeout(() => {
+      clearAuthSession();              // Clears active tokens from Zustand memory store [S4]
+      window.location.href = "/login"; // Forces a hard browser window location swap [S4]
+    }, 2500);
+
+  } catch (error) {
+    console.error("❌ Security credential update rejected:", error);
+    
+    const serverStatus = error.response?.status;
+    const errorMessage = error.response?.data?.message;
+
+    if (serverStatus === 401 || serverStatus === 404) {
+      setPasswordChangeError(errorMessage || "Authentication failed. Incorrect current credentials.");
+    } else {
+      setPasswordChangeError(errorMessage || "An unexpected processing breakdown occurred inside network channels.");
+    }
+  }finally{
+    setIsSubmitting(false)
+  }
+};
+
+    const handleCloseModal = () => setModalConfig(prev => ({ ...prev, isOpen: false }));
+  const handleSignOut = async () => {
+      //  const activeTokenSnapshot = useAuthStore.getState().accessToken;
+      clearAuthSession(); 
+      navigate('/login');
+  try {
+    console.log("Terminating active user workspace session channels...");
+      await axios.post(
+      "http://localhost:5000/api/auth/logout", 
+      {}, 
+      { 
+        withCredentials: true,
+        headers: { 
+          Authorization: `Bearer ${accessToken}` // 🚀 Now passes your token gate cleanly! [S4]
+        }
+      }
+    );
+    console.log("Backend session cookie signatures revoked successfully.")
+  } catch (error) {
+    console.warn("Server logout notification dropped or already expired:", error.error || error.message);
+  }
+  };
+  const handleUpdateAccount = async () =>{
+    try{
+       const cleanName = newUserName.trim();
+      const cleanBusiness = newBusinessName.trim();
+      if (!cleanName || !cleanBusiness) {
+      setAccountUpdateError("Validation Check: all input fields are required to update your workspace.")
+      return; // 
+    }
+    await api.patch("/auth/update-account", 
+      {
+        newOwnerName: cleanName,
+        newBusinessName: cleanBusiness
+      },
+      { headers: { Authorization: `Bearer ${accessToken}` } }
+    );
+    setAccountUpdateError("")
+    setNewBusinessName("")
+    setNewUserName("")
+    // console.log(response.data)
+    setModalConfig({
+      isOpen: true,
+      type: "success", 
+      title: "Password Changed Successfully",
+      message: "Your Store account parameters have been updated successfully.",
+      actionLabel: "Return to Profile" 
+    });
+    setShowEditProfile(false)
+    }catch(error){
+      console.error("❌ Profile modification request rejected on frontend client:", error);
+       const serverErrorMessage = error.response?.data?.message;
+       setAccountUpdateError(serverErrorMessage)
+    }
+  }
   return (
     <div className="min-h-screen bg-[#f8fafc] ">
       {/* Page Header */}
       <header className="flex w-full pt-3 pb-3 items-center justify-between border-b border-slate-400 bg-surface-lowest px-4 sm:px-6">
-        <h1 className="text-headline-md font-sans text-primary-container">
+        <h1 className="text-label-lg font-sans text-primary-container">
           Profile Settings
         </h1>
 
         <button  type="button"  className="inline-flex items-center justify-center p-0.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-200 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 cursor-pointer group shadow-xs select-none"
              aria-label="Open user account profile settings menu">
             <div className="w-9 h-9 rounded-full bg-primary text-white border border-blue-400/20 flex items-center justify-center font-bold font-sans text-[13px] uppercase shrink-0 shadow-md transition-transform duration-200 group-hover:scale-95">
-                JA
+                {initials}
             </div>
         </button>
       </header>
@@ -31,22 +215,22 @@ const ProfilePage = () => {
               {/* Avatar */}
               <div className="h-16 w-16 shrink-0 overflow-hidden rounded-full border border-[#D9DEE8]">
                 <div className="w-full h-full rounded-full bg-primary-container text-white border border-blue-400/20 flex items-center justify-center font-bold font-sans text-[13px] uppercase shrink-0 shadow-md transition-transform duration-200 group-hover:scale-95">
-                JA
+                {initials}
             </div>
               </div>
 
               <div>
-                <h2 className="text-headline-md tracking-tighter text-on-surface">
-                  Sarah Jenkins
+                <h2 className="text-headline-md tracking-tighter capitalize text-on-surface">
+                  {userData?.owner_name} 
                 </h2>
 
                 <p className="mt-0.5 text-body-md text-slate-400">
-                  sarah.j@baazio-client.com
+                  {userData?.business_email}
                 </p>
 
                 <div className="mt-2 flex flex-wrap items-center gap-2">
                   <span className="rounded-full bg-surface-highest px-3 py-1 text-label-md  font-sans text-on-surface">
-                    Role: Business Owner
+                    Role: {userData?.role==="OWNER" ?"Business Owner":""}
                   </span>
 
                   <span className="inline-flex items-center gap-1 rounded-full border border-emerald-300 bg-[#ECFDF3] px-3 py-1 text-label-md font-medium text-[#15803D]">
@@ -99,8 +283,8 @@ const ProfilePage = () => {
                 <p className="mb-1 block text-label-md  text-on-surface">
                   Full Name
                 </p>
-                    <p className="h-8 w-full flex items-center mt-2 rounded-sm border border-slate-200 bg-white px-2.5 text-body-md text-slate-600 ">
-                        Sarah Jenkins
+                    <p className="h-8 w-full flex items-center capitalize mt-2 rounded-sm border border-slate-200 bg-white px-2.5 text-body-md text-slate-600 ">
+                        {userData?.owner_name}
                     </p>
               </div>
 
@@ -109,8 +293,8 @@ const ProfilePage = () => {
                 <p className="mb-1 block text-label-md  text-on-surface">
                  Business Name
                 </p>
-                    <p className="h-8 w-full flex items-center mt-2 rounded-sm border border-slate-200 bg-white px-2.5 text-body-md text-slate-600 ">
-                        Jenkins Logistics LLC
+                    <p className="h-8 w-full flex items-center capitalize mt-2 rounded-sm border border-slate-200 bg-white px-2.5 text-body-md text-slate-600 ">
+                        {userData?.business_name}
                     </p>
                 
               </div>
@@ -143,7 +327,7 @@ const ProfilePage = () => {
 
                   <input
                     type="email"
-                    value="sarah.j@baazio-client.com"
+                    value={userData?.business_email}
                     readOnly
                     className="h-8 w-full rounded-sm border border-slate-200 bg-slate-100 pl-8 pr-2.5 text-label-md text-slate-600 outline-none"
                   />
@@ -170,20 +354,37 @@ const ProfilePage = () => {
                   </p>
 
                   <h4 className="mt-0.5 text-body-md font-bold text-primary">
-                    Pro Plan
+                    {subscription?.plan_name}
                   </h4>
                 </div>
 
                 <div className="text-right">
-                  <span className="inline-flex items-center gap-1 rounded-sm border border-emerald-300 bg-[#ECFDF3] px-3 py-1 text-label-md font-medium text-[#15803D]">
-                    Status: Active
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#22C55E] animate-pulse" />
-                  </span>
-
+                {activePlanStatus === "expired" ? (
+                    <span className="text-[10px] font-black text-red-600 bg-red-50 border border-red-100 rounded-lg px-2.5 py-0.5 uppercase tracking-wider select-none animate-pulse inline-flex items-center gap-1">
+                      <span className="w-1 h-1 rounded-full bg-red-500" />
+                      Expired
+                    </span>
+                  ) : (
+                    <span className="text-[10px] font-black text-emerald-600 bg-emerald-50 border border-emerald-100 rounded-lg px-2.5 py-0.5 uppercase tracking-wider select-none inline-flex items-center gap-1">
+                      <span className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
+                      Active
+                    </span>
+                  )}
                   <p className="mt-1 font-sans text-body-md text-slate-500">
                     Next Renewal:{" "}
                     <span className="font-semibold text-[#334155]">
-                      Sep 19, 2026
+                      {
+                        subscription.expired_at ? (
+                          // 🎯 THE EXACT FIX: Converts raw timestamps into clear words natively!
+                          new Date(subscription.expired_at).toLocaleDateString('en-NG', { 
+                            month: 'long',  // 📝 Explodes "09" out into full word string "September"
+                            day: 'numeric', // 🔢 Displays "19"
+                            year: 'numeric' // 🔢 Displays "2026"
+                          })
+                        ) : (
+                          "Loading date parameter..."
+                        )
+                      }
                     </span>
                   </p>
                 </div>
@@ -192,6 +393,7 @@ const ProfilePage = () => {
 
             <button
               type="button"
+              onClick={() =>navigate("/admin-dashboard/billing")}
               className="mt-5 h-10 w-full rounded-md border border-secondary bg-secondary text-label-md text-white transition hover:bg-primary-container hover:border-primary-container"
             >
               Manage Plan
@@ -206,21 +408,27 @@ const ProfilePage = () => {
 
             {/* Staff */}
             <div className="mb-6">
-              <div className="mb-3 flex items-center justify-between">
+              <div className="mb-3 flex flex-row items-center justify-between">
                 <span className="text-label-md text-[#64748B]">
                   Active Cashier Profiles
                 </span>
 
                 <span className="text-label-md font-mono text-[#334155]">
-                  3 / 5
+                  {staffCount} / {subscription.max_staff ===999999? "UNLIMITED":subscription.max_staff}
                 </span>
               </div>
 
               <div className="h-3 overflow-hidden rounded-full bg-surface-high">
                 <div
                   className="h-full rounded-full bg-primary"
-                  style={{ width: "60%" }}
+                  style={{
+                  // 🚀 THE EXACT MATH FIX: Forces 100% fill if unlimited, else 
+                  width: subscription.max_staff === 999999 
+                    ? "10%" 
+                    : `${Math.min(100, (staffCount / (subscription.max_staff || 1)) * 100)}%`
+                }}
                 />
+                
               </div>
             </div>
 
@@ -232,17 +440,22 @@ const ProfilePage = () => {
                 </span>
 
                 <span className="text-label-md font-mono text-[#334155]">
-                  412 / 2,000
+                  {currentSalesCount} / {subscription.max_sales ===999999? "UNLIMITED":subscription.max_sales}
                 </span>
               </div>
 
               <div className="h-3 overflow-hidden rounded-full bg-surface-high">
                 <div
                   className="h-full rounded-full bg-primary"
-                  style={{ width: "20.6%" }}
+                  style={{ width:`${salesProgressPercent}%`}}
                 />
               </div>
             </div>
+            <div className="mt-4 pt-4 border-t border-slate-300 text-left">
+            <p className="text-body-sm font-sans text-slate-500 font-medium leading-relaxed">
+              💡 <span className="font-bold text-slate-700">Baazio Core Parameter Diagnostics:</span> Your store is currently running on the <span className="font-bold text-blue-600 uppercase">{subscription.plan_name?.replace('_', ' ')}</span> package tier. Resource ceilings reset automatically upon account lifecycle renewal on <span className="font-mono font-bold text-slate-700 bg-slate-100 border border-slate-200/60 rounded px-1.5 py-0.5">{new Date(subscription.expired_at).toLocaleDateString('en-NG', { month: 'short', day: 'numeric', year: 'numeric' })}</span>.
+            </p>
+          </div>
           </section>
 
           {/* Security */}
@@ -252,6 +465,12 @@ const ProfilePage = () => {
             </h3>
 
             <div className="space-y-4">
+              {/* <div className="border rounded-lg p-2"> */}
+                <p className="text-body-md  text-tertiary text-center">
+                {passwordChangeError}
+              </p>
+              {/* </div> */}
+              
               {/* Current Password */}
               <div>
                 <label className="mb-1 font-sans text-label-md font-medium text-on-surface-variant">
@@ -262,6 +481,7 @@ const ProfilePage = () => {
                 <input
                   required
                   type={showPassword ? "text" : "password"}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
                   placeholder="••••••••"
                   className={`w-full h-9 pl-4 pr-11 rounded-md border text-label-md border-slate-400 mt-1 text-slate-700 focus:outline-none focus:bg-white transition-all bg-slate-50/40 shadow-3xs ${
                     showPassword ? "tracking-normal" : "tracking-widest placeholder:tracking-normal"
@@ -299,6 +519,7 @@ const ProfilePage = () => {
                 <input
                   required
                   type={showNewPassword ? "text" : "password"}
+                  onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="••••••••"
                   className={`w-full h-9 pl-4 pr-11 rounded-md border text-label-md border-slate-400 mt-1 text-slate-700 focus:outline-none focus:bg-white transition-all bg-slate-50/40 shadow-3xs ${
                     showNewPassword? "tracking-normal" : "tracking-widest placeholder:tracking-normal"
@@ -330,14 +551,24 @@ const ProfilePage = () => {
 
               <button
                 type="button"
+                onClick={handleChangePassword}
+                 disabled={isSubmitting}
                 className="rounded-md border border-secondary bg-secondary px-3 py-1.5 text-label-md font-medium text-white transition "
               >
-                Change Password
+                {isSubmitting ? (
+                    <>
+                      <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Processing...
+                    </>
+                  ) : (
+                    "Change Password"
+                  )}
               </button>
 
               {/* Logout */}
               <button
                 type="button"
+                onClick={handleSignOut}
                 className="flex h-9 w-full items-center justify-center gap-1.5 rounded-md border border-[#FECACA] bg-[#FFF1F2] text-body-md font-semibold text-[#EF4444] transition hover:bg-[#FEE2E2]"
               >
                 <svg
@@ -369,13 +600,16 @@ const ProfilePage = () => {
 
               <button
                 type="button"
-                onClick={() => setShowEditProfile(false)}
+                onClick={() =>{ setShowEditProfile(false), setAccountUpdateError("")}}
                 className="text-slate-500 hover:text-[#334155]"
               >
                 ✕
               </button>
+              
             </div>
-
+          <p className="text-body-md  text-tertiary text-center">
+                  {accountUpdateError}
+                </p>
             <div className="space-y-4">
               <div>
                 <label className="mb-1 block text-label-md font-medium text-on-surface">
@@ -384,7 +618,8 @@ const ProfilePage = () => {
 
                 <input
                   type="text"
-                  defaultValue="Sarah Jenkins"
+                  onChange={(e) =>setNewUserName(e.target.value)}
+                  defaultValue={userData?.owner_name}
                   className="h-9 w-full rounded-md border border-slate-300 mt-2 px-3 text-body-sm outline-none focus:border-[#2563EB]"
                 />
               </div>
@@ -396,7 +631,8 @@ const ProfilePage = () => {
 
                 <input
                   type="text"
-                  defaultValue="Jenkins Logistics LLC"
+                  defaultValue={userData?.business_name}
+                  onChange={(e) =>setNewBusinessName(e.target.value)}
                   className="h-9 w-full rounded-md border border-slate-300 mt-2 px-3 text-body-sm outline-none focus:border-[#2563EB]"
                 />
               </div>
@@ -405,15 +641,14 @@ const ProfilePage = () => {
             <div className="mt-6 flex justify-end gap-2">
               <button
                 type="button"
-                onClick={() => setShowEditProfile(false)}
+                onClick={() =>{setShowEditProfile(false), setAccountUpdateError("")}}
                 className="rounded-md border border-slate-300 px-4 py-1 text-body-md font-medium text-on-surface-variant hover:bg-[#F8FAFC]"
               >
                 Cancel
               </button>
-
               <button
                 type="button"
-                onClick={() => setShowEditProfile(false)}
+                onClick={handleUpdateAccount}
                 className="rounded-md bg-secondary px-4 py-1 text-body-md  text-white hover:bg-[#1D4ED8]"
               >
                 Save Changes
@@ -422,6 +657,15 @@ const ProfilePage = () => {
           </div>
         </div>
       )}
+       <AlertModal 
+          isOpen={modalConfig.isOpen}
+          type={modalConfig.type}
+          title={modalConfig.title}
+          message={modalConfig.message}
+          actionLabel={modalConfig.actionLabel}
+          onAction={handleCloseModal} 
+          onClose={handleCloseModal}  
+        />
     </div>
   );
 };

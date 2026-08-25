@@ -217,10 +217,10 @@ export default function ForgotPasswordModal({ isOpen, onClose }) {
                 <input 
                   required
                   type="text"
+                  inputMode="numeric"
                   maxLength={6}
                   disabled={isSubmitting}
                   value={otpInput}
-                  maxLength={6}
                   onChange={(e) => setOtpInput(e.target.value.replace(/\D/g, ''))} // Strictly forces digits parameters formatting
                   placeholder="e.g. 482910"
                   className="w-full h-10 px-3 text-center font-mono tracking-[0.4em] text-label-md rounded-md border border-slate-300 text-slate-800 mt-1 placeholder:text-slate-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-100 transition-all bg-slate-50/40 shadow-3xs"

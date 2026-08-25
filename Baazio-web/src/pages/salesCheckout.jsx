@@ -90,7 +90,7 @@ export default function CheckoutReviewPage() {
       const serverFeedbackMessage = err.response?.data?.message || "Failed to finalize database records transaction.";
        setModalConfig({
         isOpen: true,
-        type: "danger", // 🚀 Automatically turns the popup layout themes to warning red! [S4]
+        type: "danger", 
         title: "Transaction Refused",
         message: serverFeedbackMessage,
         actionLabel: "Try Again" // Maps cleanly to your {actionLabel} parameter element [S4]
@@ -450,14 +450,14 @@ export default function CheckoutReviewPage() {
         </div>
 
          <AlertModal 
-        isOpen={modalConfig.isOpen}
-        type={modalConfig.type}
-        title={modalConfig.title}
-        message={modalConfig.message}
-        actionLabel={modalConfig.actionLabel}
-        onAction={handleCloseModal} // 🎯 Direct confirmation handler button path [S4]
-        onClose={handleCloseModal}  // 🎯 Background backdrop clicking safety paths
-      />
+            isOpen={modalConfig.isOpen}
+            type={modalConfig.type}
+            title={modalConfig.title}
+            message={modalConfig.message}
+            actionLabel={modalConfig.actionLabel}
+            onAction={handleCloseModal} // 🎯 Direct confirmation handler button path [S4]
+            onClose={handleCloseModal}  // 🎯 Background backdrop clicking safety paths
+          />
     </div>
     
   );

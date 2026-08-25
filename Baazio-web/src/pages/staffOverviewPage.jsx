@@ -421,176 +421,98 @@ const initials = userData?.staff_name
 
       {/* ================= BODY ================= */}
       <tbody className="divide-y divide-slate-300 bg-white">
-        {salesHistory.map((tx) => {
-          const { dateWords, timeString } =
-            formatInvoiceTimestamp(tx.createdAt);
-          return (
-            <tr
-              key={tx.id}
-              className="hover:bg-slate-50/30 transition-colors"
+        {salesHistory.length === 0 ? (
+  <tr>
+    <td 
+      colSpan={4} 
+      className="p-8 text-center text-slate-500 font-sans text-body-lg"
+    >
+      <div className="flex flex-col items-center justify-center gap-2">
+        {/* Optional: Add an icon */}
+        <svg 
+          className="w-8 h-8 text-slate-300 stroke-2" 
+          fill="none" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+        </svg>
+        <p className="font-medium text-slate-600">No sales history found</p>
+        <p className="text-sm text-slate-400">Transactions will appear here once recorded.</p>
+      </div>
+    </td>
+  </tr>
+) : (
+  salesHistory.map((tx) => {
+    const { dateWords, timeString } = formatInvoiceTimestamp(tx.createdAt);
+    return (
+      <tr
+        key={tx.id}
+        className="hover:bg-slate-50/30 transition-colors"
+      >
+        {/* PAYMENT METHOD */}
+        <td className="p-3 sm:p-4 text-slate-500 text-body-lg font-sans whitespace-nowrap">
+          {tx.payment_method}
+        </td>
+        
+        {/* TOTAL AMOUNT */}
+        <td className="p-3 sm:p-4 font-bold text-slate-800 text-body-lg font-mono whitespace-nowrap">
+          ₦
+          {Number(tx.total_amount).toLocaleString("en-NG", {
+            minimumFractionDigits: 2,
+          })}
+        </td>
+        
+        {/* TIMESTAMP */}
+        <td className="p-3 sm:p-4 text-slate-400 font-medium">
+          <div className="flex min-w-0">
+            <p className="text-body-lg text-slate-700 whitespace-nowrap">
+              {dateWords}
+            </p>
+          </div>
+        </td>
+
+        {/* ACTIONS */}
+        <td className="p-3 sm:p-4 text-right pr-4 sm:pr-6">
+          <div className="flex items-center justify-end gap-2 whitespace-nowrap">
+            {/* VIEW */}
+            <button
+              type="button"
+              onClick={() => handleOpenDescriptionDrawer(tx.id)}
+              className="h-8 px-3 border border-primary-container hover:border-primary bg-primary-container text-surface-lowest hover:bg-primary rounded-md font-bold text-[11px] transition-all cursor-pointer shadow-sm inline-flex items-center justify-center gap-1.5 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
             >
+              <svg className="w-3.5 h-3.5 stroke-2 text-surface-lowest" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              <span>View</span>
+            </button>
+            
+            {/* PRINT */}
+            <button
+              type="button"
+              disabled={activePrintingId !== null}
+              onClick={() => handleTriggerReceiptPrint(tx.id, tx.total_amount, tx.payment_method)}
+              className={`h-9 px-3 border border-secondary hover:border-slate-400 bg-surface-lowest rounded-md font-bold text-label-md transition-colors inline-flex items-center justify-center gap-1.5 shadow-sm shrink-0 ${
+                activePrintingId === tx.id
+                  ? "cursor-not-allowed border-slate-300 hover:text-slate-400 text-slate-500"
+                  : "cursor-pointer text-primary hover:text-secondary"
+              }`}
+            >
+              <svg className="w-4 h-4 stroke-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 9V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M7 13h10v6a1 1 0 01-1 1H8a1 1 0 01-1-1v-6z" />
+              </svg>
+              <span>{activePrintingId === tx.id ? "Processing..." : "Print Receipt"}</span>
+            </button>
+          </div>
+        </td>
+      </tr>
+    );
+  })
+)}
 
-              {/* PAYMENT METHOD */}
-              <td className="p-3 sm:p-4 text-slate-500 text-body-lg font-sans whitespace-nowrap">{tx.payment_method} </td>
-              {/* TOTAL AMOUNT */}
-              <td className="p-3 sm:p-4 font-bold text-slate-800 text-body-lg font-mono whitespace-nowrap">
-                ₦
-                {Number(tx.total_amount).toLocaleString("en-NG", {
-                  minimumFractionDigits: 2,
-                })}
-              </td>
-              {/* TIMESTAMP */}
-              <td className="p-3 sm:p-4 text-slate-400 font-medium">
-                <div className="flex  min-w-0">
-                  <p className="text-body-lg text-slate-700 whitespace-nowrap">
-                    {dateWords}
-                  </p>
-
-                  {/*
-                  <p className="text-body-md text-slate-500">
-                    {timeString}
-                  </p>
-                  */}
-
-                </div>
-
-              </td>
-
-
-              {/* ACTIONS */}
-              <td className="p-3 sm:p-4 text-right pr-4 sm:pr-6">
-                <div className="flex items-center justify-end gap-2 whitespace-nowrap">
-                  {/* VIEW */}
-                  <button
-                    type="button"
-                    onClick={() =>
-                      handleOpenDescriptionDrawer(tx.id)
-                    }
-                    className="
-                      h-8
-                      px-3
-                      border
-                      border-primary-container
-                      hover:border-primary
-                      bg-primary-container
-                      text-surface-lowest
-                      hover:bg-primary
-                      rounded-md
-                      font-bold
-                      text-[11px]
-                      transition-all
-                      cursor-pointer
-                      shadow-sm
-                      inline-flex
-                      items-center
-                      justify-center
-                      gap-1.5
-                      focus:outline-none
-                      disabled:opacity-50
-                      disabled:cursor-not-allowed
-                      shrink-0
-                    "
-                  >
-
-                    <svg
-                      className="w-3.5 h-3.5 stroke-2 text-surface-lowest"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                      />
-                    </svg>
-
-                    <span>View</span>
-
-                  </button>
-                  
-                  {/* PRINT */}
-                  <button
-                    type="button"
-                    disabled={activePrintingId !== null}
-                    onClick={() =>
-                      handleTriggerReceiptPrint(
-                        tx.id,
-                        tx.total_amount,
-                        tx.payment_method
-                      )
-                    }
-                    className={`
-                      h-9
-                      px-3
-                      border
-                      border-secondary
-                      hover:border-slate-400
-                      bg-surface-lowest
-                      rounded-md
-                      font-bold
-                      text-label-md
-                      transition-colors
-                      inline-flex
-                      items-center
-                      justify-center
-                      gap-1.5
-                      shadow-sm
-                      shrink-0
-                      ${
-                        activePrintingId === tx.id
-                          ? "cursor-not-allowed border-slate-300 hover:text-slate-400 text-slate-500"
-                          : "cursor-pointer text-primary hover:text-secondary"
-                      }
-                    `}
-                  >
-
-                    <svg
-                      className="w-4 h-4 stroke-2 text-slate-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2"
-                      />
-
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M17 9V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4"
-                      />
-
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M7 13h10v6a1 1 0 01-1 1H8a1 1 0 01-1-1v-6z"
-                      />
-                    </svg>
-
-                    <span>
-                      {activePrintingId === tx.id
-                        ? "Processing..."
-                        : "Print Receipt"}
-                    </span>
-
-                  </button>
-
-                </div>
-
-              </td>
-
-            </tr>
-          );
-        })}
 
       </tbody>
 

@@ -5,7 +5,7 @@ import { parseExcelStockSheet } from '../utils/excelparser';
 
 export default function UploadInventoryPage() {
     const accessToken = useAuthStore((state) => state.accessToken);
-    const setAuthSession = useAuthStore((state) => state.setAuthSession);
+   const [isDownloadingTemplate, setIsDownloadingTemplate] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
   const fileInputRef = useRef(null);
   const [inventoryRows, setInventoryRows] = useState([
@@ -173,6 +173,35 @@ export default function UploadInventoryPage() {
     setIsProcessing(false);
   }
 };
+const triggerTemplateDownloadAction = async () => {
+  try {
+    console.log("📡 Dispatching authenticated Axios data-stream extraction...");
+
+    setIsDownloadingTemplate(true);
+    const response = await api.get("/products/download-template", {
+      responseType: "blob", // 🎯 CRUCIAL: Tells Axios to treat the data as a downloadable file asset
+    });
+
+    const blobFileUrl = window.URL.createObjectURL(new Blob([response.data], { type: "text/csv" }));
+    
+    // 3. Construct a virtual anchor element mapping directly to your filesystem layout guidelines
+    const virtualDownloadLink = document.createElement("a");
+    virtualDownloadLink.href = blobFileUrl;
+    
+    // Explicitly define the saving layout target file name string natively
+    virtualDownloadLink.setAttribute("download", "baazio_product_upload_template.csv");
+  
+    document.body.appendChild(virtualDownloadLink);
+    virtualDownloadLink.click();
+    document.body.removeChild(virtualDownloadLink);
+    window.URL.revokeObjectURL(blobFileUrl);
+
+  } catch (error) {
+    console.error("❌ Failed to stream down bulk storage spreadsheet asset:", error);
+  }finally{
+    setIsDownloadingTemplate(false)
+  }
+};
 
   return (
    <div className="w-full min-h-screen flex flex-col gap-2 text-left select-none  font-sans pb-12 bg-[#f8fafc] ">
@@ -223,15 +252,17 @@ export default function UploadInventoryPage() {
             type="button"
             disabled={isProcessing}
             onClick={() => fileInputRef.current?.click()}
-            className="h-8 px-7 bg-primary font-sans hover:bg-primary-container disabled:bg-slate-200 text-surface-lowest rounded-md text-body-md font-sans  transition-all  cursor-pointer disabled:cursor-not-allowed"
+            className="h-8 px-7 bg-primary font-sans hover:bg-primary-container disabled:bg-slate-200 text-surface-lowest rounded-md text-body-md   transition-all  cursor-pointer disabled:cursor-not-allowed"
           >
             {isProcessing ? "Processing Data Sheet..." : "Select File"}
           </button>
-          <button 
+          <button
             type="button"
-            className="h-8 px-5 bg-surface-lowest border border-slate-300 hover:bg-slate-50 text-on-surface rounded-md text-body-md font-sans transition-colors cursor-pointer"
+            onClick={triggerTemplateDownloadAction}
+            disabled={isDownloadingTemplate} // 🛡️ Hard lock: Blocks double clicks completely while running! [S4]
+            className={`className="h-8 px-5 border hover:bg-surface  bg-surface-lowest border-slate-300  text-on-surface rounded-md text-body-md font-sans transition-colors cursor-pointer active:scale-[0.98] disabled:cursor-not-allowed"`}
           >
-            Download Template
+            {isDownloadingTemplate ? "Processing File...": "Download Template"}
           </button>
         </div>
       </div>

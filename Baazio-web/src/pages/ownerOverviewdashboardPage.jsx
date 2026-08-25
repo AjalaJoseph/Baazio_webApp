@@ -19,7 +19,6 @@ export default function DashboardHome() {
     const [selectedSalesId, setSelectedSalesId] = useState(null);
   const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
    const accessToken = useAuthStore((state) => state.accessToken);
-   const setAuthSession = useAuthStore((state) => state.setAuthSession);
    const CHRONOLOGICAL_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
     useEffect(() => {
       const fetchDashboardTelemetry = async () => {
@@ -132,7 +131,7 @@ const cash = paymentMethod?.cashPercentage ?? 0;
   const maxSalesLimit= usage?.salesLimitAllowed || 300;
   const currentPlan = usage?.plan || "FREE_TRIAL";
   const currentSalesCount= usage?.salesUsedThisMonth || 0;
-  const salesProgressPercent = (currentSalesCount / maxSalesLimit) * 100
+  const salesProgressPercent = maxSalesLimit==="UNLIMITED"?10:(currentSalesCount / maxSalesLimit) * 100
   const baselineGrid = CHRONOLOGICAL_DAYS.map(dayName => ({day: dayName, revenue: 0}));
   weeklyRevenue.forEach((item) =>{
     const matchedDayNode = baselineGrid.find(node => node.day === item.day_label);
