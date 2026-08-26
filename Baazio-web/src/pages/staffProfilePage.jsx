@@ -112,7 +112,7 @@ const StaffProfilePage = () => {
       try {
         console.log("Terminating active user workspace session channels...");
           await axios.post(
-          "http://localhost:5000/api/auth/logout", 
+          "https://baazio-api.onrender.com/api/auth/logout", 
           {}, 
           { 
             withCredentials: true,

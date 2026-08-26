@@ -3,7 +3,7 @@ import { useAuthStore } from '../store/authStore';
 import { useAlertStore } from '../store/alertStore'; // 🎯 Injects your fresh store utility [S4]
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: 'https://baazio-api.onrender.com/api',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
@@ -53,7 +53,7 @@ api.interceptors.response.use(
       try {
         if (!refreshPromise) {
           console.log("🔄 Starting token refresh...");
-          refreshPromise = axios.post("http://localhost:5000/api/auth/refresh-token", {}, {
+          refreshPromise = axios.post("https://baazio-api.onrender.com/api/auth/refresh-token", {}, {
             withCredentials: true,
           })
           .then((response) => {
