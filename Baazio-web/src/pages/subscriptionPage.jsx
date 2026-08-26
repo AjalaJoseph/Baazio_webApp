@@ -14,7 +14,7 @@ export default function BillingSubscriptionPage() {
 useEffect(() =>{
   const getuserPlan = async () =>{
     try{
-      const response = await api.get("/auth/subscription/usage");
+      const response = await api.get("/auth/subscription/usage",{ headers: { Authorization: `Bearer ${accessToken}` } }),
         
         if (response.data?.data) {
           const payload = response.data.data;
