@@ -6,7 +6,7 @@ export default function BillingSubscriptionPage() {
   // const [currentPlan, setCurrentPlan] = useState("PRO"); // "BASIC" | "PRO"
   const [isProcessingPaystack, setIsProcessingPaystack] = useState(false);
   const [planSelected, setPlanSelected] = useState("")
-   const [usage, setUsage] = useState(null)
+   const [usage, setUsage] = useState({})
    const [planExpiredDate, setPlanExpireDate] = useState("")
    const accessToken = useAuthStore((state) => state.accessToken)
    const currentDate = new Date()
