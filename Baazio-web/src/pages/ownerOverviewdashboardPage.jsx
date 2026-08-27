@@ -36,7 +36,7 @@ export default function DashboardHome() {
          paymentMethodSplitResponse,
          latestSalseResponse
         ] = await Promise.all([
-          api.get('/auth/me', { headers: { Authorization: `Bearer ${accessToken}` } }),
+          api.get("/auth/me", { headers: { Authorization: `Bearer ${accessToken}` } }),
           api.get('/sales/overview', { headers: { Authorization: `Bearer ${accessToken}` } }),
           api.get("/sales/top-products", { headers: { Authorization: `Bearer ${accessToken}` } }),
           api.get("/auth/all-staff",{ headers: { Authorization: `Bearer ${accessToken}` } }),

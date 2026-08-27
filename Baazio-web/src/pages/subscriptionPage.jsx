@@ -23,6 +23,7 @@ useEffect(() =>{
         }
       } catch (error) {
         console.error("User plan data get error ", error);
+        console.log(error?.response?.data.message)
       }
     
   }
