@@ -35,16 +35,17 @@ const router = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: "/server-error", element: <ServerErrorPage /> },
       {
-        element: <PublicOnlyRoute/>,
-        children: [
-          { path: "/login", element: <Login /> },
-          { path: "/register", element: <Register /> },
-          {
             path:"/privacy-policy", element:<PrivacyPolicy/>
           },
           {
             path:"/terms-of-service" , element:<TermsOfService/>
-          }
+          },
+      {
+        element: <PublicOnlyRoute/>,
+        children: [
+          { path: "/login", element: <Login /> },
+          { path: "/register", element: <Register /> },
+          
         ]
       },
      {
