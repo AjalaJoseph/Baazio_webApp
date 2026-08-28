@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import logoImage2 from "../assets/images/new baazio logo (2).png"
 
 export default function Footer() {
   return (
@@ -42,7 +41,7 @@ export default function Footer() {
               <a href="#about" className="hover:text-white transition-colors">
                 About Baazio
               </a>
-              <a href="#service" className="hover:text-white transition-colors">
+              <a href="#features" className="hover:text-white transition-colors">
                 Explore Features
               </a>
               <Link to="/register">

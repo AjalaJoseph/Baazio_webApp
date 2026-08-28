@@ -90,6 +90,57 @@
   --spacing-stack-md: 16px;
   --spacing-stack-lg: 24px;
   --spacing-section-padding: 64px;
+
+   --animate-fade-in-up: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-fade-in-down: fade-in-down 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  
+  /* Keep your image float and CTA pulse infinite since they are non-text assets */
+  --animate-float: float 4s ease-in-out infinite;
+  --animate-cta-pulse: cta-pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-shimmer: shimmer 6s infinite linear;
+
+  --utility-delay-200: animation-delay: 200ms;
+  --utility-delay-400: animation-delay: 400ms;
+  --utility-delay-600: animation-delay: 600ms;
+}
+
+ /* ⚡ THE INFINITE BREATHING KEYFRAMES ⚡ */
+ @keyframes fade-in-down {
+  0% { 
+    opacity: 0; 
+    transform: translateY(-16px); /* Start slightly higher */
+  }
+  100% { 
+    opacity: 1; 
+    transform: translateY(0); /* Lock perfectly in place */
+  }
+}
+
+@keyframes fade-in-up {
+  0% { 
+    opacity: 0; 
+    transform: translateY(16px); /* Start slightly lower */
+  }
+  100% { 
+    opacity: 1; 
+    transform: translateY(0); /* Lock perfectly in place */
+  }
+}
+
+/* Keep your image and CTA keyframes untouched below this */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes cta-pulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4); }
+  50% { transform: scale(1.03); box-shadow: 0 0 20px 6px rgba(37, 99, 235, 0); }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-150%) skewX(-25deg); }
+  20%, 100% { transform: translateX(250%) skewX(-25deg); }
 }
 
 /* 🧱 2. NATIVE GLOBAL LAYOUT OVERRIDES */

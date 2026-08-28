@@ -127,7 +127,8 @@ export default function Register() {
     {/* ========================================================================= */}
     {/* ⚪ REGISTRATION FORM ELEVATED CARD CONTAINER (Now centered standalone) */}
     {/* ========================================================================= */}
-        <div className="w-full max-w-115 my-5 bg-surface-lowest border border-slate-200 rounded-md p-8 md:p-10 lg:p-8 shadow-md shadow-slate-400 text-left">
+    <div className="w-full min-h-screen bg-slate-50 flex items-center justify-center px-4 sm:px-6 py-12">
+        <div className="w-full max-w-115 bg-surface-lowest border border-slate-200 rounded-md p-8 md:p-10 lg:p-8 shadow-md shadow-slate-400 text-left">
         {isSubmittedSuccessfully ? (
           /* CASE 1: ONBOARDING DISPATCH SUCCESS PANEL */
           <div className="flex flex-col items-center text-center py-4 font-sans">
@@ -315,6 +316,7 @@ export default function Register() {
           </div>
           </>)}
           
-              </div>
+         </div>
+         </div>
               </div>
   )}

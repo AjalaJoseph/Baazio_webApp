@@ -376,7 +376,7 @@ export default function Login() {
           <span className="text-slate-300">•</span>
           <Link to="/privacy-policy" className="hover:text-slate-600 transition-colors">Privacy Policy</Link>
           <span className="text-slate-300">•</span>
-          <Link to="/terms" className="hover:text-slate-600 transition-colors">Terms</Link>
+          <Link to="/terms-of-service" className="hover:text-slate-600 transition-colors">Terms</Link>
         </div>
           <ForgotPasswordModal 
         isOpen={isForgotOpen} 

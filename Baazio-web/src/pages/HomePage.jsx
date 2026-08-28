@@ -114,36 +114,36 @@ export default function Home() {
       <Navbar/>
         <main>
             <section id="home" className="w-full bg-background py-16 px-6 md:px-8 ">
-            <div className="w-full max-w-287.5 mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            <div className="w-full max-w-287.5 mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-10 items-stretch justify-between">
         {/* 🏢 LEFT CORE: HIGH-CONTRAST STATIC TYPOGRAPHY AREA */}
         <div className="flex flex-col gap-6 text-left max-w-xl">
           
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 ">
             {/* 🎯 STITCH ALIGNMENT: text-display-lg creates perfect, tightly tracked 48px header typography */}
-            <h1 className="text-display-lg text-on-surface font-bold tracking-tight leading-[110%]">
+            <h1 className="text-display-lg text-on-surface font-bold tracking-tight leading-[110%] animate-fade-in-down ">
               The Faster, Smarter Way to Run Your Retail Store.
             </h1>
             {/* 🎯 text-headline-md adds a high-density 24px secondary semantic title string */}
-            {/* <h2 className="text-headline-md text-primary font-semibold tracking-tight">
+            <h2 className="text-headline-md text-primary font-semibold tracking-tight animate-fade-in-up">
               Record Sales in Seconds & Track Business Performance.
-            </h2> */}
+            </h2>
           </div>
 
-          <p className="text-body-md text-on-surface-variant leading-relaxed">
+          <p className="text-body-md text-on-surface-variant leading-relaxed animate-fade-in-down delay-600">
             Keep your checkout counters moving instantly without any system slowdowns. Track daily sales, manage cash and card payments easily, and get automatic inventory and profit reports all from one secure, easy-to-use platform .
           </p>
 
           {/* Core Call to Actions Hub */}
-          <div className="flex flex-wrap lg:gap-4 mt-2 md:gap-4 gap-2">
+          <div className="flex flex-wrap lg:gap-4 mt-2 md:gap-4 gap-2 animate-fade-in-up delay-200">
             <Link 
               to="/register" 
-              className="text-label-md font-semibold bg-primary-container hover:bg-primary text-white px-6 py-3.5 rounded-sm transition-colors shadow-xs cursor-pointer select-none"
+              className="text-label-md font-semibold bg-primary-container hover:bg-primary text-white px-6 py-3.5 rounded-sm transition-colors shadow-sm cursor-pointer select-none animate-cta-pulse"
             >
               Start Free Trial
             </Link>
             <a 
               href="#services" 
-              className="text-label-md font-semibold bg-surface-lowest hover:bg-surface-low border border-outline rounded-sm text-on-surface px-6 py-3.5 transition-colors shadow-xs cursor-pointer inline-flex items-center gap-2 select-none"
+              className="text-label-md font-semibold bg-surface-lowest hover:bg-surface-low border border-outline rounded-sm text-on-surface px-6 py-3.5 transition-colors shadow-sm shadow-slate-500 cursor-pointer inline-flex items-center gap-2 select-none"
             >
               See How It Works
             </a>
@@ -152,16 +152,18 @@ export default function Home() {
         </div>
 
         {/* 🖼️ RIGHT CORE: HERO PREVIEW CANVAS BLOCK */}
-        <div className="w-full flex items-center justify-center animate-fade-in">
+        <div className="w-full flex items-stretch justify-center animate-fade-in">
           <div className="w-full max-w-140 rounded-md  border-outline-variant bg-surface-lowest p-2 shadow-sm relative group overflow-hidden">
             
             {/* Smooth background glow layer token effect */}
-            <div className="absolute inset-0 bg-linear-to-tr from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+            {/* <div className="absolute inset-0 bg-linear-to-tr from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none animate-shimmer">
+            <p>htvvv</p>
+            </div> */}
             
             <img 
               src={heroImage} 
-              alt="BizFlow Operational Terminal Framework" 
-              className="w-full h-auto object-contain block rounded-md border-0 border-outline-variant bg-surface-low" 
+              alt="Baazio Operational Terminal Framework" 
+              className="w-full h-full object-cover  block rounded-md border-0 border-outline-variant bg-surface-low animate-float" 
             />
           </div>
         </div>
@@ -271,7 +273,7 @@ export default function Home() {
             className="relative group bg-surface-lowest shadow-md rounded-lg p-6 text-left cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-xs"
           >
             {/* Minimal Icon Badge */}
-            <div className="w-12 h-12 rounded-md bg-surface-variant flex items-center justify-center text-2xl mb-4 group-hover:bg-primary-fixed-dim transition-colors duration-300">
+            <div className="w-12 h-12 rounded-md bg-surface-variant flex items-center justify-center text-2xl mb-4 group-hover:bg-primary-fixed-dim transition-colors duration-300 ">
               {service.icon}
             </div>
 

@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import logoImg from '../assets/images/logo.png'; 
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom'; 
 import logoImage2 from "../assets/images/new baazio logo (2).png";
 
 /**
@@ -8,8 +7,32 @@ import logoImage2 from "../assets/images/new baazio logo (2).png";
  * Upgraded with a mobile menu icon toggle and fluid mobile drawer panel overlay.
  */
 export default function Navbar() {
-  // 📱 Track state toggle flag for mobile view overlay panel
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+   const [activeSection, setActiveSection] = useState("home");
+
+  // 2. Automatically detect which section is on screen during scroll events
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = ["home", "services", "about"];
+      const scrollPosition = window.scrollY + 200; // Offset for navbar height
+
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element) {
+          const top = element.offsetTop;
+          const height = element.offsetHeight;
+
+          if (scrollPosition >= top && scrollPosition < top + height) {
+            setActiveSection(section);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <header className="w-full bg-surface-lowest border-b border-outline-variant sticky top-0 z-50 shadow-sm">
@@ -20,7 +43,7 @@ export default function Navbar() {
           <Link to="/" className="inline-block w-35 select-none hover:opacity-90 transition-opacity">
             <img 
               src={logoImage2} 
-              alt="BIZFLOW" 
+              alt="Baazio" 
               className="w-full h-auto object-contain block" 
             />
           </Link>
@@ -30,25 +53,42 @@ export default function Navbar() {
         <nav className="hidden md:flex items-center gap-8 h-full text-body-sm font-medium text-on-surface-variant">
           <a 
             href="/" 
-            className="relative flex items-center h-full text-primary font-semibold select-none group"
+            onClick={() => setActiveSection("home")}
+            className={`text-body-md font-medium relative py-2 transition-colors cursor-pointer select-none ${
+            activeSection === "home" ? "text-primary" : "text-on-surface hover:text-primary"
+          }`}
           >
             Home
-            <span className="absolute bottom-0 left-0 w-full h-[2.5px] bg-primary rounded-t-xs"></span>
+            {activeSection === "home" && (
+            <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary rounded-full animate-fade-in"></span>
+          )}
           </a>
           
           <a 
             href="#services" 
-            className="relative flex items-center h-full hover:text-primary transition-colors select-none"
+             onClick={() => setActiveSection("services")}
+           className={`text-body-md font-medium relative py-2 transition-colors cursor-pointer select-none ${
+            activeSection === "services" ? "text-primary" : "text-on-surface hover:text-primary"
+          }`}
           >
             Services
+            {activeSection === "services" && (
+            <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary rounded-full animate-fade-in"></span>
+          )}
           </a>
           
-          <a 
-            href="#about" 
-            className="relative flex items-center h-full hover:text-primary transition-colors select-none"
-          >
-            About Us
-          </a>
+          <a
+          href="#about"
+          onClick={() => setActiveSection("about")}
+          className={`text-body-md font-sans relative py-2 transition-colors cursor-pointer select-none ${
+            activeSection === "about" ? "text-primary" : "text-on-surface hover:text-primary"
+          }`}
+        >
+          About Us
+          {activeSection === "about" && (
+            <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary rounded-full animate-fade-in"></span>
+          )}
+        </a>
         </nav>
 
         {/* 🔑 RIGHT SECTION ACCESS OPERATIONS CONTROLS (Desktop Layout) */}
@@ -62,7 +102,7 @@ export default function Navbar() {
           
           <Link 
             to="/register" 
-            className="text-label-md bg-primary-container hover:bg-primary text-white px-5 py-2.5 rounded-sm transition-colors shadow-xs cursor-pointer select-none"
+            className="text-label-md bg-primary-container hover:bg-primary text-white px-5 py-2.5 rounded-sm transition-colors shadow-sm shadow-slate-500 cursor-pointer select-none"
           >
             Get Started
           </Link>

@@ -25,6 +25,8 @@ import CheckoutReviewPage from './pages/salesCheckout.jsx';
 import SalesHistoryPage from './pages/staffSales.jsx';
 import ProfilePage from './pages/profilePage.jsx';
 import StaffProfilePage from './pages/staffProfilePage.jsx';
+import PrivacyPolicy from './pages/privacyPolicy.jsx';
+import TermsOfService from './pages/TermsAndService.jsx';
 const router = createBrowserRouter([
   {
     path:"/",
@@ -36,7 +38,13 @@ const router = createBrowserRouter([
         element: <PublicOnlyRoute/>,
         children: [
           { path: "/login", element: <Login /> },
-          { path: "/register", element: <Register /> }
+          { path: "/register", element: <Register /> },
+          {
+            path:"/privacy-policy", element:<PrivacyPolicy/>
+          },
+          {
+            path:"/terms-of-service" , element:<TermsOfService/>
+          }
         ]
       },
      {
